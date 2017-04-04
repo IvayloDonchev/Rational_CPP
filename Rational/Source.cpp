@@ -1,31 +1,30 @@
 #include <iostream>
 #include <cmath>
-#include <exception>
+#include "DivideByZeroException.h"
 using namespace std;
 
 class Rational
 {
 private:
-	int num;	// числител
-	int den;    // знаменател
-	void Normalize();
+	int num;			// числител
+	int den;			// знаменател
+	void Normalize();	// съкращава дробта
 public:
-	static int gcd(int, int);    // Н.О.Д.
-	Rational() : num(0), den(1) {}
-	Rational(int, int);
-	Rational(double);
-	void Show() const;
+	static int gcd(int, int);		// Н.О.Д.
+	Rational() : num(0), den(1) {}	// default constructor
+	Rational(int, int);				// constructor
+	Rational(double);				// конструира Rational от double 
+	void Show() const;				// показва на екрана
 	bool IsZero() const;
 	bool operator!() { return num == 0; }
-	double ToDouble() const { return (double)num / den; }
-	operator double() { return static_cast<double>(num) / den; }
+	double ToDouble() const { return static_cast<double>(num) / den; }
+	operator double() { return static_cast<double>(num) / den; }	// преобразува до тип double
 	Rational operator+(const Rational&);
 	Rational operator-(const Rational&);
 	Rational operator*(const Rational&);
 	Rational operator/(const Rational&);
-	friend Rational operator +(const double&, const Rational&);
-	friend ostream& operator <<(ostream&, const Rational&);
-	friend istream& operator >>(istream&, Rational&);
+	friend ostream& operator <<(ostream&, const Rational&);		// предефинира операцията за извеждане
+	friend istream& operator >>(istream&, Rational&);			// предефинира операцията за въвеждане
 	Rational Sum(const Rational&);   // сума с метод на класа
 	Rational Sub(const Rational&);   // разлика с метод на класа
 	Rational Mult(const Rational&);  // произведение с метод на класа
@@ -61,7 +60,7 @@ int Rational::gcd(int a, int b)
 
 Rational::Rational(int a, int b)
 {
-	if (b == 0) throw "Incorrect parameter...";
+	if (b == 0) throw DivideByZeroException("Incorrect parameter...");
 	else
 		if(a == 0)
 		{
@@ -121,7 +120,7 @@ Rational Rational::operator*(const Rational &r2)
 Rational Rational::operator/(const Rational &r2)
 {
 	if (r2.IsZero())
-		throw "Division by zero!";
+		throw DivideByZeroException();
 	else
 		return Rational(num*r2.den, den*r2.num);
 }
@@ -147,11 +146,6 @@ Rational Rational::Quot(const Rational &r2)
 		throw "Division by zero!";
 	else
 		return Rational(num*r2.den, den*r2.num);
-}
-
-Rational operator+(const double &d, const Rational &r)
-{
-	return Rational(d+r);
 }
 
 ostream & operator<<(ostream &out, const Rational &r)
@@ -199,26 +193,35 @@ int main()
 {
 	cout << Rational::gcd(18, 12) << endl;   // 6
 	try {
-		Rational r1(2, 4);			// 1/2
-		Rational r2(9, -12);			// -3/4
-		cout << "r1 = "; r1.Show();
-		cout << "r2 = "; r2.Show();
+		Rational r1(2, 4);				
+		Rational r2(9, -12);			
+		cout << "r1 = "; r1.Show();		// r1 = 1/2
+		cout << "r2 = " << r2 << endl;	// r2 = -3/4
 		Rational r;
 		r = r1 + r2;
-		cout << r << endl;
-		(r1 + r2).Show();
-		(r1*r2).Show();
-		r = r1 - r2;
-		r.Show();
-		Sub(r1, r2).Show();
-		r = r1 / r2;
-		r.Show();
+		cout << r << endl;				// -1/4
+		(r1 + r2).Show();				// -1/4
+		cout << r1*r2 << endl;			// -3/8
+		r = r1 - r2;					
+		cout << r << endl;				// 5/4
+		Sub(r1, r2).Show();				// 5/4
+		r = r1 / r2;					
+		r.Show();						// -2/3
+
+		Rational r3 = 0.125;
+		cout << "r3 = " << r3 << endl;  // r3 = 1/8
+		cout << double(r3) + 0.25 << endl; // 0.375
+		cout << r3 + Rational(0.25) << endl; // 3/8
+
+		cout << r3 / Rational(0, 1) << endl; // Attempted to divide by zero
+		// Rational r4(2, 0); // Incorrect parameter...
+
 	}
-	catch (char* s)
+	catch (DivideByZeroException &divideByZeroException)
 	{
-		cerr << s << endl;
+		cout << divideByZeroException.what() << endl;
 		return 0;
-	}	
+	}
 }
 
 
