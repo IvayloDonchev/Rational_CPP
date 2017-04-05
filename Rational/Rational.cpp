@@ -57,11 +57,6 @@ Rational::Rational(double d)
 	Normalize();
 }
 
-void Rational::Show() const
-{
-	std::cout << num << "/" << den << std::endl;
-}
-
 bool Rational::IsZero() const
 {
 	return num == 0;
@@ -90,28 +85,6 @@ Rational Rational::operator/(const Rational &r2)
 		return Rational(num*r2.den, den*r2.num);
 }
 
-Rational Rational::Sum(const Rational &r2)
-{
-	return Rational(this->num*r2.den + r2.num*den, den*r2.den);
-}
-
-Rational Rational::Sub(const Rational &r2)
-{
-	return Rational(num*r2.den - r2.num*den, den*r2.den);
-}
-
-Rational Rational::Mult(const Rational &r2)
-{
-	return Rational(num*r2.num, den*r2.den);
-}
-
-Rational Rational::Quot(const Rational &r2)
-{
-	if (r2.IsZero())
-		throw "Division by zero!";
-	else
-		return Rational(num*r2.den, den*r2.num);
-}
 
 std::ostream & operator<<(std::ostream &out, const Rational &r)
 {
@@ -125,31 +98,4 @@ std::istream & operator>>(std::istream &ent, Rational &r)
 	std::cout << "denominator: "; ent >> r.den;
 	r.Normalize();
 	return ent;
-}
-
-Rational Sum(const Rational &r1, const Rational &r2)
-{
-	/*Rational result;
-	result.num = r1.num*r2.den + r2.num*r1.den;
-	result.den = r1.den*r2.den;
-	return result;*/
-	return Rational(r1.num*r2.den + r2.num*r1.den, r1.den*r2.den);
-}
-
-Rational Sub(const Rational &r1, const Rational &r2)
-{
-	return Rational(r1.num*r2.den - r2.num*r1.den, r1.den*r2.den);
-}
-
-Rational Mult(const Rational &r1, const Rational &r2)
-{
-	return Rational(r1.num*r2.num, r1.den*r2.den);
-}
-
-Rational Quot(const Rational &r1, const Rational &r2)
-{
-	if (r2.IsZero())
-		throw "Division by zero!";
-	else
-		return Rational(r1.num*r2.den, r1.den*r2.num);
 }
