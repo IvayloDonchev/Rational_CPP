@@ -3,16 +3,10 @@
 void Rational::Normalize()
 {
 	int g = gcd(abs(num), abs(den));
-	if (num>0 && den>0 || num<0 && den<0)
-	{
-		num = abs(num) / g;
-		den = abs(den) / g;
-	}
-	else
-	{
-		num = -abs(num) / g;
-		den = abs(den) / g;
-	}
+	num = abs(num) / g;
+	den = abs(den) / g;
+	if (num > 0 && den < 0 || num < 0 && den>0)
+		num = -num;
 }
 
 int Rational::gcd(int a, int b)

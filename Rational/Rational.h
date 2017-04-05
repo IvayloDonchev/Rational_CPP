@@ -22,6 +22,6 @@ public:
 	Rational operator-(const Rational&);
 	Rational operator*(const Rational&);
 	Rational operator/(const Rational&);
-	friend std::ostream& operator <<(std::ostream&, const Rational&);		// предефинира операцията за извеждане
+	friend std::ostream& operator <<(std::ostream&, const Rational&);   // предефинира операцията за извеждане
 	friend std::istream& operator >>(std::istream&, Rational&);			// предефинира операцията за въвеждане
 };
